@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Booking System - Login & Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('https://i.pinimg.com/736x/39/80/f3/3980f332805110ef706aa1c565675c7c.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .auth-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #777;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        .input-group input,
+        .role-selection select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus,
+        .role-selection select:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            width: 100%;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #d9534f;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .success-message {
+            color: #28a745;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .role-selection {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h1>Welcome to the Movie Ticket Booking System</h1>
+        
+        <div class="tab-container">
+            <div class="tab active" id="login-tab" onclick="switchTab('login')">Login</div>
+            <div class="tab" id="signup-tab" onclick="switchTab('signup')">Sign Up</div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="form-container active" id="login-form">
+            <form id="loginForm">
+                <div class="role-selection">
+                    <label for="login-role">Select Role:</label>
+                    <select id="login-role" name="role" required>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            <p id="login-message" class="error-message"></p>
+        </div>
+        
+        <!-- Signup Form -->
+        <div class="form-container" id="signup-form">
+            <form id="signupForm">
+                <div class="input-group">
+                    <label for="signup-name">Name:</label>
+                    <input type="text" id="signup-name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="role-selection">
+                    <label for="signup-role">Select Role:</label>
+                    <select id="signup-role" name="role" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-confirm-password">Confirm Password:</label>
+                    <input type="password" id="signup-confirm-password" name="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit">Create Account</button>
+            </form>
+            <p id="signup-message" class="error-message"></p>
+        </div>
+    </div>
+
+    <script>
+        // Store registered users (would normally be handled by a database)
+        let registeredUsers = [
+            { name: 'Admin User', role: 'admin', email: 'admin@example.com', password: 'admin123' },
+            { name: 'Test User', role: 'user', email: 'user@example.com', password: 'user123' }
+        ];
+
+        // Switch between login and signup tabs
+        function switchTab(tab) {
+            // Hide all forms and deactivate all tabs
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tabElement => {
+                tabElement.classList.remove('active');
+            });
+            
+            // Show the selected form and activate the selected tab
+            document.getElementById(tab + '-form').classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            // Clear messages
+            document.getElementById('login-message').textContent = '';
+            document.getElementById('signup-message').textContent = '';
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const role = document.getElementById('login-role').value;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const messageElement = document.getElementById('login-message');
+            
+            // Find the user in our "database"
+            const user = registeredUsers.find(user => 
+                user.email === email && 
+                user.password === password && 
+                user.role === role
+            );
+            
+            if (user) {
+                messageElement.textContent = 'Login successful! Redirecting...';
+                messageElement.className = 'success-message';
+                
+                // Redirect based on role
+                setTimeout(() => {
+                    if (role === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        window.location.href = 'user-dashboard.html';
+                    }
+                }, 1500);
+            } else {
+                messageElement.textContent = 'Invalid credentials or incorrect role selected.';
+                messageElement.className = 'error-message';
+            }
+        });
+
+        // Signup form handler
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('signup-name').value;
+            const role = document.getElementById('signup-role').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const messageElement = document.getElementById('signup-message');
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                messageElement.textContent = 'Passwords do not match!';
+                return;
+            }
+            
+            // Check if email already exists
+            if (registeredUsers.some(user => user.email === email)) {
+                messageElement.textContent = 'This email is already registered. Please login instead.';
+                return;
+            }
+            
+            // Add new user to our "database"
+            registeredUsers.push({
+                name: name,
+                role: role,
+                email: email,
+                password: password
+            });
+            
+            // Show success message
+            messageElement.textContent = 'Account created successfully! You can now login.';
+            messageElement.className = 'success-message';
+            
+            // Clear the form
+            document.getElementById('signupForm').reset();
+            
+            // Switch to login tab after a delay
+            setTimeout(() => {
+                switchTab('login');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

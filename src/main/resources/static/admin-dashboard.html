@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.pinimg.com/736x/d5/e1/54/d5e154c2fd72fc5dab6ab4440fab755f.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #main-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            border-radius: 8px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #logout-container {
+            text-align: right;
+            margin: 10px;
+        }
+
+        #admin-actions button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #admin-actions button:hover {
+            background-color: #0056b3;
+        }
+
+        form {
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            background-color: rgba(233, 236, 239, 0.8);
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <!-- Logout Button -->
+        <div id="logout-container">
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <h1>Dashboard</h1>
+
+        <div id="admin-actions">
+            <button onclick="showAddMovieForm()">Add Movie</button>
+            <button onclick="showViewMovies()">View Movies</button>
+            <button onclick="showAddTheatreForm()">Add Theatre</button>
+            <button onclick="showViewTheatres()">View Theatres</button>
+        </div>
+
+        <!-- Add Movie Form -->
+        <div id="addMovieForm" style="display: none;">
+            <h3>Add Movie</h3>
+            <form id="addMovieFormElement">
+                <label for="movieTitle">Title:</label>
+                <input type="text" id="movieTitle" name="movieTitle" required><br>
+
+                <label for="movieLanguage">Language:</label>
+                <input type="text" id="movieLanguage" name="movieLanguage" required><br>
+
+                <label for="movieGenre">Genre:</label>
+                <input type="text" id="movieGenre" name="movieGenre" required><br>
+
+                <button type="submit">Add Movie</button>
+            </form>
+            <div id="addMovieFeedback" style="margin-top: 10px;"></div>
+        </div>
+
+        <!-- View Movies -->
+        <div id="viewMovies" style="display: none;">
+            <h3>View Movies</h3>
+            <ul id="moviesList"></ul>
+        </div>
+
+        <!-- Add Theatre Form -->
+        <div id="addTheatreForm" style="display: none;">
+            <h3>Add Theatre</h3>
+            <form id="addTheatreFormElement">
+                <label for="theatreName">Name:</label>
+                <input type="text" id="theatreName" name="theatreName" required><br>
+
+                <label for="theatreLocation">Location:</label>
+                <input type="text" id="theatreLocation" name="theatreLocation" required><br>
+
+                <button type="submit">Add Theatre</button>
+            </form>
+            <div id="addTheatreFeedback" style="margin-top: 10px;"></div>
+        </div>
+
+        <!-- View Theatres -->
+        <div id="viewTheatres" style="display: none;">
+            <h3>View Theatres</h3>
+            <ul id="theatresList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Logout Function
+        function logout() {
+            window.location.href = 'index.html'; // Redirect to home/login page
+        }
+
+        // Show Add Movie Form
+        function showAddMovieForm() {
+            document.getElementById('addMovieForm').style.display = 'block';
+            document.getElementById('viewMovies').style.display = 'none';
+            document.getElementById('addTheatreForm').style.display = 'none';
+            document.getElementById('viewTheatres').style.display = 'none';
+        }
+
+        // Show View Movies
+        function showViewMovies() {
+            fetchMovies();
+            document.getElementById('addMovieForm').style.display = 'none';
+            document.getElementById('viewMovies').style.display = 'block';
+            document.getElementById('addTheatreForm').style.display = 'none';
+            document.getElementById('viewTheatres').style.display = 'none';
+        }
+
+        // Show Add Theatre Form
+        function showAddTheatreForm() {
+            document.getElementById('addMovieForm').style.display = 'none';
+            document.getElementById('viewMovies').style.display = 'none';
+            document.getElementById('addTheatreForm').style.display = 'block';
+            document.getElementById('viewTheatres').style.display = 'none';
+        }
+
+        // Show View Theatres
+        function showViewTheatres() {
+            fetchTheatres();
+            document.getElementById('addMovieForm').style.display = 'none';
+            document.getElementById('viewMovies').style.display = 'none';
+            document.getElementById('addTheatreForm').style.display = 'none';
+            document.getElementById('viewTheatres').style.display = 'block';
+        }
+
+        // Fetch Movies
+        function fetchMovies() {
+            fetch('http://localhost:8081/admin/view-movies')
+                .then(response => response.json())
+                .then(movies => {
+                    const moviesList = document.getElementById('moviesList');
+                    moviesList.innerHTML = '';
+                    movies.forEach(movie => {
+                        const li = document.createElement('li');
+                        li.textContent = `Title: ${movie.title}, Language: ${movie.language}, Genre: ${movie.genre}`;
+                        moviesList.appendChild(li);
+                    });
+                });
+        }
+
+        // Fetch Theatres
+        function fetchTheatres() {
+            fetch('http://localhost:8081/admin/view-theatres')
+                .then(response => response.json())
+                .then(theatres => {
+                    const theatresList = document.getElementById('theatresList');
+                    theatresList.innerHTML = '';
+                    theatres.forEach(theatre => {
+                        const li = document.createElement('li');
+                        li.textContent = `Name: ${theatre.name}, Location: ${theatre.location}`;
+                        theatresList.appendChild(li);
+                    });
+                });
+        }
+
+        // Add Movie Form Submission
+        document.getElementById('addMovieFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('movieTitle').value;
+            const language = document.getElementById('movieLanguage').value;
+            const genre = document.getElementById('movieGenre').value;
+
+            fetch('http://localhost:8081/admin/addMovie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, language, genre })
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('addMovieFeedback').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('addMovieFeedback').textContent = "Error: " + error.message;
+            });
+        });
+
+        // Add Theatre Form Submission
+        document.getElementById('addTheatreFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('theatreName').value;
+            const location = document.getElementById('theatreLocation').value;
+
+            fetch('http://localhost:8081/admin/addTheatre', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, location })
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('addTheatreFeedback').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('addTheatreFeedback').textContent = "Error: " + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
